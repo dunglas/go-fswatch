@@ -2,6 +2,7 @@
 package fswatch
 
 // #cgo pkg-config: libfswatch
+// #cgo CFLAGS: -Wall -Werror
 // #include <stdint.h>
 // #include <stdlib.h>
 // #include <libfswatch/c/libfswatch.h>
@@ -139,7 +140,7 @@ func NewSession(paths []string, c Callback, options ...Option) (*Session, error)
 	h := cgo.NewHandle(s)
 	s.callback = c
 	s.cgoHandle = h
-	C.fsw_set_callback(s.handle, C.FSW_CEVENT_CALLBACK(C.process_events), unsafe.Pointer(h)) //nolint:unsafeptr
+	C.set_callback(s.handle, C.uintptr_t(h))
 
 	return s, nil
 }
