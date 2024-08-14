@@ -56,4 +56,4 @@ jobs:
         env:
           PKG_CONFIG_PATH: ${{ github.workspace }}/fswatch/target/lib/pkgconfig
           LD_LIBRARY_PATH: ${{ github.workspace }}/fswatch/target/lib
-        run: go test
+        run: go test -race
