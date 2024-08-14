@@ -1,0 +1,60 @@
+---
+name: Tests
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        go-version: ['stable', 'oldstable']
+    env:
+      GOEXPERIMENT: cgocheck2
+    name: Go (${{ matrix.go-version }})
+    steps:
+      -
+        uses: actions/checkout@v4
+      -
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+      -
+        name: Fetch fswatch version
+        id: fswatch-version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "version=$(gh release view --repo emcrisostomo/fswatch --json tagName --jq .tagName)" >> "$GITHUB_OUTPUT"
+      -
+        name: Cache libfswatch
+        id: libfswatch
+        uses: actions/cache@v4
+        with:
+          path: fswatch/target
+          key: ${{ runner.os }}-${{ steps.fswatch-version.outputs.version }}-fswatch
+      -
+        name: Compile libfswatch
+        if: steps.libfswatch.outputs.cache-hit != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir fswatch/
+          gh release download "${{ steps.fswatch-version.outputs.version }}" --repo emcrisostomo/fswatch --pattern 'fswatch-*.tar.gz' --output - | tar -xz -C fswatch --strip-components=1
+          cd fswatch/
+          ./configure --prefix=$(pwd)/target
+          make -j"$(getconf _NPROCESSORS_ONLN)"
+          make install
+      #-
+      #  name: Run tests
+      #  env:
+      #    PKG_CONFIG_PATH: ${{ github.workspace }}/fswatch/target/lib/pkgconfig
+      #  run: go test
+      -
+        uses: mxschmitt/action-tmate@v3
