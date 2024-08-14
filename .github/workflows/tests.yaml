@@ -51,10 +51,9 @@ jobs:
           ./configure --prefix=$(pwd)/target
           make -j"$(getconf _NPROCESSORS_ONLN)"
           make install
-      #-
-      #  name: Run tests
-      #  env:
-      #    PKG_CONFIG_PATH: ${{ github.workspace }}/fswatch/target/lib/pkgconfig
-      #  run: go test
       -
-        uses: mxschmitt/action-tmate@v3
+        name: Run tests
+        env:
+          PKG_CONFIG_PATH: ${{ github.workspace }}/fswatch/target/lib/pkgconfig
+          LD_LIBRARY_PATH: ${{ github.workspace }}/fswatch/target/lib
+        run: go test
