@@ -1,7 +1,7 @@
 package fswatch
 
 // #include <stdlib.h>
-// #include <libfswatch.h>
+// #include <libfswatch/c/libfswatch.h>
 import "C"
 
 // Option instances allow to configure monitors.
