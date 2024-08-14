@@ -1,11 +1,10 @@
 // Package fswatch provides bindings for libfswatch.
 package fswatch
 
-// #cgo LDFLAGS: -L/usr/local/lib -lfswatch
-// #cgo CFLAGS: -I/usr/local/include/libfswatch/c
+// #cgo pkg-config: libfswatch
 // #include <stdint.h>
 // #include <stdlib.h>
-// #include <libfswatch.h>
+// #include <libfswatch/c/libfswatch.h>
 // #include "fswatch.h"
 import "C"
 import (
