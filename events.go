@@ -1,6 +1,6 @@
 package fswatch
 
-// #include <libfswatch.h>
+// #include <libfswatch/c/libfswatch.h>
 import "C"
 import "time"
 

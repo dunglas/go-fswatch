@@ -1,6 +1,6 @@
 package fswatch
 
-// #include <libfswatch.h>
+// #include <libfswatch/c/libfswatch.h>
 import "C"
 
 type FilterType C.enum_fsw_filter_type
