@@ -11,14 +11,15 @@ permissions:
   contents: read
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: ['ubuntu-latest', 'macos-latest']
         go-version: ['stable', 'oldstable']
     env:
       GOEXPERIMENT: cgocheck2
-    name: Go (${{ matrix.go-version }})
+    name: Go (${{ matrix.os }}, Go ${{ matrix.go-version }})
     steps:
       -
         uses: actions/checkout@v4
@@ -56,4 +57,5 @@ jobs:
         env:
           PKG_CONFIG_PATH: ${{ github.workspace }}/fswatch/target/lib/pkgconfig
           LD_LIBRARY_PATH: ${{ github.workspace }}/fswatch/target/lib
+          DYLD_LIBRARY_PATH: ${{ github.workspace }}/fswatch/target/lib
         run: go test -race
