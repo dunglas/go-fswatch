@@ -19,6 +19,9 @@ jobs:
         go-version: ['stable', 'oldstable']
     env:
       GOEXPERIMENT: cgocheck2
+      PKG_CONFIG_PATH: ${{ github.workspace }}/fswatch/target/lib/pkgconfig
+      LD_LIBRARY_PATH: ${{ github.workspace }}/fswatch/target/lib
+      DYLD_LIBRARY_PATH: ${{ github.workspace }}/fswatch/target/lib
     name: Go (${{ matrix.os }}, Go ${{ matrix.go-version }})
     steps:
       -
@@ -54,10 +57,6 @@ jobs:
           make install
       -
         name: Run tests
-        env:
-          PKG_CONFIG_PATH: ${{ github.workspace }}/fswatch/target/lib/pkgconfig
-          LD_LIBRARY_PATH: ${{ github.workspace }}/fswatch/target/lib
-          DYLD_LIBRARY_PATH: ${{ github.workspace }}/fswatch/target/lib
         run: go test -race
       -
         name: Lint
