@@ -59,3 +59,7 @@ jobs:
           LD_LIBRARY_PATH: ${{ github.workspace }}/fswatch/target/lib
           DYLD_LIBRARY_PATH: ${{ github.workspace }}/fswatch/target/lib
         run: go test -race
+      -
+        name: Lint
+        if: matrix.go-version == 'stable' && matrix.os == 'ubuntu-latest'
+        uses: golangci/golangci-lint-action@v6
